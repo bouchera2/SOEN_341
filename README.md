@@ -10,7 +10,7 @@ As an example, you can take a look at: https://www.campusgroups.com
 ** Core Features ** 
 We identify three primary users: Students, Organizers, and Administrators.
 
-** 1. Student Event Experience **
+**1. Student Event Experience**
 Event Discovery
 
 Browse and search events with filters (date, category, organization).
