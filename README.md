@@ -7,7 +7,7 @@ You are implementing a Campus Events & Ticketing Web Application designed to hel
 
 As an example, you can take a look at: https://www.campusgroups.com
 
-##**Core Features** 
+## **Core Features** 
 We identify three primary users: Students, Organizers, and Administrators.
 
 **1. Student Event Experience**
