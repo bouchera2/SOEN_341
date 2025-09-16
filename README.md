@@ -14,45 +14,34 @@ We identify three primary users: Students, Organizers, and Administrators.
 
 Event Discovery
 
-Browse and search events with filters (date, category, organization).
+ -Browse and search events with filters (date, category, organization).
 
- Event Management 
-
-Save events to a personal calendar.
-
-Claim tickets (free or mock paid).
-
-Receive a digital ticket with a unique QR code.
+Event Management 
+ -Save events to a personal calendar.
+ -Claim tickets (free or mock paid).
+ -Receive a digital ticket with a unique QR code.
 
 **2. Organizer Event Management**
 Event Creation
-
-Enter event details: title, description, date/time, location, ticket capacity, ticket type (free or paid).
+ -Enter event details: title, description, date/time, location, ticket capacity, ticket type (free or paid).
 
 Event Analytics
-
-Dashboard per event with stats: tickets issued, attendance rates, and remaining capacity.
+ -Dashboard per event with stats: tickets issued, attendance rates, and remaining capacity.
 
 Tools
-
-Export the attendee list in CSV.
-
-Integrated QR scanner for ticket validation (for simplicity, you can assume the QR code image can be provided via file upload).
+ -Export the attendee list in CSV.
+ -Integrated QR scanner for ticket validation (for simplicity, you can assume the QR code image can be provided via file upload).
 
 **3. Administrator Dashboard & Moderation**
 Platform Oversight
-
-Approve organizer accounts.
-
-Moderate event listings for policy compliance.
+ -Approve organizer accounts.
+ -Moderate event listings for policy compliance.
 
 Analytics
-
-View global stats: number of events, tickets issued, and participation trends.
+ -View global stats: number of events, tickets issued, and participation trends.
 
 Management
+ -Manage organizations and assign roles.
 
-Manage organizations and assign roles.
-
-Additional Feature
+## Additional Feature
 In addition to these three core features, you need to propose one feature with your TA. 
