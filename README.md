@@ -16,7 +16,7 @@ We identify three primary users: Students, Organizers, and Administrators.
 
  -Browse and search events with filters (date, category, organization).
 
-Event Management 
+<ins>Event Management</ins> 
 
  -Save events to a personal calendar.
  
@@ -27,15 +27,15 @@ Event Management
 
 **2. Organizer Event Management**
 
-Event Creation
+<ins>Event Creation</ins>
 
  -Enter event details: title, description, date/time, location, ticket capacity, ticket type (free or paid).
 
-Event Analytics
+<ins>Event Analytics</ins>
 
  -Dashboard per event with stats: tickets issued, attendance rates, and remaining capacity.
 
-Tools
+<ins>Tools</ins>
 
  -Export the attendee list in CSV.
  
@@ -43,13 +43,13 @@ Tools
 
 **3. Administrator Dashboard & Moderation**
 
-Platform Oversight
+<ins>Platform Oversight</ins>
 
  -Approve organizer accounts.
  
  -Moderate event listings for policy compliance.
 
-Analytics
+<ins>Analytics</ins>
 
  -View global stats: number of events, tickets issued, and participation trends.
 
