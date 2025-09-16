@@ -12,7 +12,7 @@ We identify three primary users: Students, Organizers, and Administrators.
 
 **1. Student Event Experience**
 
-Event Discovery
+<ins>Event Discovery</ins>
 
  -Browse and search events with filters (date, category, organization).
 
