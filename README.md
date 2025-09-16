@@ -7,15 +7,15 @@ You are implementing a Campus Events & Ticketing Web Application designed to hel
 
 As an example, you can take a look at: https://www.campusgroups.com
 
-Core Features
+** Core Features ** 
 We identify three primary users: Students, Organizers, and Administrators.
 
-1. Student Event Experience
+** 1. Student Event Experience **
 Event Discovery
 
 Browse and search events with filters (date, category, organization).
 
-Event Management
+ Event Management 
 
 Save events to a personal calendar.
 
@@ -23,7 +23,7 @@ Claim tickets (free or mock paid).
 
 Receive a digital ticket with a unique QR code.
 
-2. Organizer Event Management
+** 2. Organizer Event Management **
 Event Creation
 
 Enter event details: title, description, date/time, location, ticket capacity, ticket type (free or paid).
@@ -38,7 +38,7 @@ Export the attendee list in CSV.
 
 Integrated QR scanner for ticket validation (for simplicity, you can assume the QR code image can be provided via file upload).
 
-3. Administrator Dashboard & Moderation
+** 3. Administrator Dashboard & Moderation **
 Platform Oversight
 
 Approve organizer accounts.
