@@ -1,7 +1,7 @@
 # SOEN_341
 SOEN 341 project FALL 2025
 
-Bouchera Hazzab (40282895) "@bouchera2" ,
+Bouchera Hazzab (40282895) @bouchera2 ,
 
 Nkrumah Leugoue Nougoue (40258711) @LNN10,
 
