@@ -84,4 +84,6 @@ Management
  -Manage organizations and assign roles.
 
 ## Additional Feature
-In addition to these three core features, you need to propose one feature with your TA. 
+### Comment section
+
+ Users can add comments and ask questions under each event. Once the user has attended the event, they will be able to rate it out of 5 stars.
