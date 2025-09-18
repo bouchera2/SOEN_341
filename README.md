@@ -84,6 +84,6 @@ Management
  -Manage organizations and assign roles.
 
 ## Additional Feature
-### Comment section and ratings
+### AI Chatbot
 
- Users can add comments and ask questions under each event. Once the user has attended the event, they will be able to rate it out of 5 stars.
+ Users will have access to an AI chatbot which will give information about the events and can recommend events based on the users database. The AI will save users information to personalize the answers to the user. 
