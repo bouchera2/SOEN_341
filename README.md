@@ -84,6 +84,6 @@ Management
  -Manage organizations and assign roles.
 
 ## Additional Feature
-### Comment section
+### Comment section and ratings
 
  Users can add comments and ask questions under each event. Once the user has attended the event, they will be able to rate it out of 5 stars.
