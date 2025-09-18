@@ -1,7 +1,7 @@
 # SOEN_341
 SOEN 341 project FALL 2025
 
-Bouchera Hazzab (40282895) @bouchera2 ,
+Bouchera Hazzab (40282895) @bouchera2,
 
 Nkrumah Leugoue Nougoue (40258711) @LNN10,
 
@@ -13,7 +13,7 @@ Elias Nasrallah (40233118) @Eliasn20,
 
 Georgy Khoder (40248521) @Georgii77,
 
-Mohammed Mrani Alaoui (40279836),
+Mohammed Mrani Alaoui (40279836) @momrania,
 
 M-Amar Kseibi (40276594) @3Ammar3
 
