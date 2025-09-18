@@ -1,7 +1,21 @@
 # SOEN_341
 SOEN 341 project FALL 2025
 
-Bouchera Hazzab (40282895), Nkrumah Leugoue Nougoue (40258711), Elizabeth Tremblay (40117481), Mahdi Djellab (40254945), Elias Nasrallah (40233118), Georgy Khoder (40248521), Mohammed Mrani Alaoui (40279836), M-Amar Kseibi (40276594)
+Bouchera Hazzab (40282895) @bouchera2,
+
+Nkrumah Leugoue Nougoue (40258711) @LNN10,
+
+Elizabeth Tremblay (40117481) @liztremblay,
+
+Mahdi Djellab (40254945) @rabzouuuz,
+
+Elias Nasrallah (40233118) @Eliasn20,
+
+Georgy Khoder (40248521) @Georgii77,
+
+Mohammed Mrani Alaoui (40279836),
+
+M-Amar Kseibi (40276594) @3Ammar3
 
 ## <ins>Language and techniques </ins> 
 
