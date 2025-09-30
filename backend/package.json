@@ -1,13 +1,15 @@
 {
-  "name": "node-express-api",
-  "description": "Simple api sample in Node",
+  "name": "concoevents",
+  "description": "concoevents backend",
   "version": "1.0.0",
   "private": true,
-  "main": "index.js",
+  "main": "dist/index.js",
   "type": "module",
   "scripts": {
-    "dev": "nodemon index.js",
-    "start": "node index.js"
+    "build": "tsc",
+    "dev": "tsx index.ts",
+    "start": "node dist/index.js",
+    "watch": "nodemon --exec tsx index.ts"
   },
   "author": "Google LLC",
   "license": "Apache-2.0",
@@ -15,6 +17,11 @@
     "express": "^4.21.2"
   },
   "devDependencies": {
-    "nodemon": "^3.0.1"
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.10.0",
+    "nodemon": "^3.0.1",
+    "ts-node": "^10.9.1",
+    "tsx": "^4.20.6",
+    "typescript": "^5.3.0"
   }
 }
