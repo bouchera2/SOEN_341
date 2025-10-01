@@ -1,15 +1,14 @@
 import express, { Request, Response } from "express";
-import { checkEventCreationPermission } from "../middleware/roleCheck.js";
+import { checkEventCreationPermission } from "../middleware/auth.js";
 import { ApiResponse, Event } from "../types/index.js";
-import { db } from "../database/firestore.js";
-import { checkUserAuthToken } from "../middleware/userAuth.js";
+import { db } from "../database/firebase.js";
 
 
 const router = express.Router();
 
 
-router.post('/', checkUserAuthToken, checkEventCreationPermission, async (req: Request<{}, {}, Event>, res: Response<ApiResponse>) => {
-
+router.post('/create', checkEventCreationPermission, async (req: Request<{}, {}, Event>, res: Response<ApiResponse>) => {
+  console.log('=== EVENT CREATION ROUTE CALLED ===');
   console.log('Request body:', req.body);
   
   const eventDetails: Event = {
@@ -66,14 +65,19 @@ router.post('/', checkUserAuthToken, checkEventCreationPermission, async (req: R
 });
 
 // GET /events - Get all events
-router.get('/', async (req: Request, res: Response<ApiResponse<Event[]>>) => {
+router.get('/getAll', async (req: Request, res: Response) => {
   try {
-    const events = await getAllEvents();
-    res.json({
-      success: true,
-      data: events,
-      details: 'Events retrieved successfully'
-    });
+    const snapshot = await db.collection('events').get();
+  if (snapshot.empty) {
+    return [];
+  }
+
+  const events: Event[] = [];
+  snapshot.forEach((doc) => {
+    events.push({ id: doc.id, ...(doc.data() as Event) });
+  });
+ 
+    res.json(events);
   } catch (error) {
     console.error('Error retrieving events:', error);
     res.status(500).json({
@@ -84,21 +88,8 @@ router.get('/', async (req: Request, res: Response<ApiResponse<Event[]>>) => {
   }
 });
 
-export async function getAllEvents(): Promise<Event[]> {
-  const snapshot = await db.collection('events').get();
-  if (snapshot.empty) {
-    return [];
-  }
-
-  const events: Event[] = [];
-  snapshot.forEach((doc) => {
-    events.push({ id: doc.id, ...(doc.data() as Event) });
-  });
-  return events;
-}
-
 // GET /events/:id - Get specific event
-router.get('/:id', async (req: Request<{ id: string }>, res: Response<ApiResponse<Event>>) => {
+router.get('/get::id', async (req: Request<{ id: string }>, res: Response) => {
   const { id } = req.params;
 
   try {
@@ -121,11 +112,7 @@ router.get('/:id', async (req: Request<{ id: string }>, res: Response<ApiRespons
       });
     }
 
-    res.json({
-      success: true,
-      data: { id: doc.id, ...(eventData as Event) },
-      details: `Event ${id} retrieved successfully`
-    });
+    res.json(eventData);
   } catch (error) {
     console.error(`Error retrieving event ${id}:`, error);
     res.status(500).json({
