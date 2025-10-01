@@ -74,6 +74,27 @@ router.get('/', (req: Request, res: Response<ApiResponse<Event[]>>) => {
   });
 });
 
+import admin from 'firebase-admin';
+
+// Initialize Firebase only once
+if (!admin.apps.length) {
+  admin.initializeApp({
+    credential: admin.credential.applicationDefault(), // or use cert() with your service account
+  });
+}
+
+const db = admin.firestore();
+
+export async function getAllEvents() {
+  const eventsRef = db.collection('events');
+  const snapshot = await eventsRef.get();
+  const events: any[] = [];
+  snapshot.forEach(doc => {
+    events.push({ id: doc.id, ...doc.data() });
+  });
+  return events;
+}
+
 // GET /events/:id - Get specific event
 router.get('/:id', (req: Request<{ id: string }>, res: Response<ApiResponse<Event>>) => {
   const { id } = req.params;
