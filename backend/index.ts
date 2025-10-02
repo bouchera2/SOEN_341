@@ -3,7 +3,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import cors from 'cors';
 
-import eventRoutes from './routes/eventsCreation.js';
+import eventRoutes from './routes/events.js';
 import { ApiResponse } from './types/index.js';
 import authRoutes from './routes/authRouter.js';
 
