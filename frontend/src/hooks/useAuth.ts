@@ -25,7 +25,7 @@ const onSignInSuccess = async (user: User) => {
     });
     const data = await response.json();
     if (!data.success) {
-      throw new Error(data.error);
+      throw new Error(data.error + ", " + data.message);
     }
     console.log(data);
   } catch (error) {
@@ -38,13 +38,12 @@ const onSignUpSuccess = async (user: User) => {
     const token = await user.getIdToken();
     
     
-    await fetch("http://localhost:4000/auth/sync", {
-      method: "POST",
+    await fetch("http://localhost:3002/auth/signup", {
+      method: "GET",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ defaultRole: "user", isNewUser: true }),
+      }
     });
     
     console.log("New user created and synced with backend");
@@ -53,10 +52,10 @@ const onSignUpSuccess = async (user: User) => {
   }
 };
 
-const onSignOutSuccess = () => {
-  console.log("User signed out successfully");
-  // You can add cleanup logic here if needed
-};
+  const onSignOutSuccess = () => {
+    console.log("User signed out successfully");
+    
+  };
 
 export function useAuth() {
   const [user, setUser] = useState<User | null>(null);

@@ -8,7 +8,7 @@ import { checkUserAuthToken } from "../middleware/userAuth.js";
 const router = express.Router();
 
 
-router.post('/sync', checkUserAuthToken, async (req: AuthenticatedRequest, res: Response) => {
+router.get('/sync', checkUserAuthToken, async (req: AuthenticatedRequest, res: Response) => {
 
     if (!req.user) {
         return res.status(500).json({ error: "User not found in request" });
@@ -31,6 +31,23 @@ router.post('/sync', checkUserAuthToken, async (req: AuthenticatedRequest, res: 
     });
 
 
+});
+
+
+router.get('/signup', checkUserAuthToken, async (req: AuthenticatedRequest, res: Response) => {
+
+    if (!req.user) {
+        return res.status(500).json({ error: "User not found in request" });
+    }
+
+   
+    await db.collection('users').doc(req.user.uid).set({...req.user, role: 'student', createdAt: new Date(), lastLogin: new Date()});
+
+    return res.status(200).json({
+        success: true,
+        message: "User signed up and synced with backend successfully",
+        data: req.user
+    });
 });
 
 export default router;
