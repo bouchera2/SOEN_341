@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express";
-import { checkEventCreationPermission } from "../middleware/auth.js";
+import { checkEventCreationPermission } from "../middleware/roleCheck.js";
 import { ApiResponse, Event } from "../types/index.js";
-import { db } from "../database/firebase.js";
+import { db } from "../database/firestore.js";
 
 
 const router = express.Router();

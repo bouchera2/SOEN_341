@@ -52,7 +52,7 @@ app.get('/eventdetails', (req: Request, res: Response) => {
 
 });
 
-app.use('/CreateEvent', eventRoutes);
+app.use('/events', eventRoutes);
 
 app.use('/auth', authRoutes);
 
