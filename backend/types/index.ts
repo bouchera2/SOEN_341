@@ -1,13 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-
-// User types
-export interface User {
-  id: string;
-  email: string;
-  role: UserRole;
-  name: string;
-  
-}
+import { DecodedIdToken } from 'firebase-admin/auth';
 
 export type UserRole = 'admin' | 'organizer' | 'student';
 
@@ -37,7 +29,7 @@ export interface Event {
 
 // Express types with custom properties
 export interface AuthenticatedRequest extends Request {
-  user?: User;
+  user?: DecodedIdToken;
 }
 
 // Middleware types

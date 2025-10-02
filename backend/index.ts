@@ -4,6 +4,7 @@ import { fileURLToPath } from 'url';
 
 import eventRoutes from './routes/eventsCreation.js';
 import { ApiResponse } from './types/index.js';
+import authRoutes from './routes/authRouter.js';
 
 const app = express();
 
@@ -40,6 +41,7 @@ app.get('/eventdetails', (req: Request, res: Response) => {
 
 app.use('/CreateEvent', eventRoutes);
 
+app.use('/auth', authRoutes);
 
 // Error handling middleware
 app.use((err: Error, req: Request, res: Response, next: any) => {

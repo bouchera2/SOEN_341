@@ -1,14 +1,15 @@
 import express, { Request, Response } from "express";
-import { checkEventCreationPermission } from "../middleware/auth.js";
+import { checkEventCreationPermission } from "../middleware/roleCheck.js";
 import { ApiResponse, Event } from "../types/index.js";
-import { db } from "../database/firebase.js";
+import { db } from "../database/firestore.js";
+import { checkUserAuthToken } from "../middleware/userAuth.js";
 
 
 const router = express.Router();
 
 
-router.post('/', checkEventCreationPermission, async (req: Request<{}, {}, Event>, res: Response<ApiResponse>) => {
-  console.log('=== EVENT CREATION ROUTE CALLED ===');
+router.post('/', checkUserAuthToken, checkEventCreationPermission, async (req: Request<{}, {}, Event>, res: Response<ApiResponse>) => {
+
   console.log('Request body:', req.body);
   
   const eventDetails: Event = {
