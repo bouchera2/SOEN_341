@@ -94,7 +94,7 @@ router.get('/get::id', async (req: Request<{ id: string }>, res: Response) => {
 
   try {
     const doc = await db.collection('events').doc(id).get();
-
+   
     if (!doc.exists) {
       return res.status(404).json({
         success: false,
@@ -125,6 +125,29 @@ router.get('/get::id', async (req: Request<{ id: string }>, res: Response) => {
 
 export default router;
 
+router.delete('/delete::id', async (req: Request<{ id: string }>, res: Response) =>{
+  const { id } = req.params;
+
+  //
+   
+  const doc = await db.collection('events').doc(id).get();
+   
+    if (!doc.exists) {
+      return res.status(404).json({
+        success: false,
+        error: 'Event not found',
+        details: `No event found with id ${id}`
+      });
+    }
+
+    const docDel = await db.collection('events').doc(id).delete();
+
+    res.json({ 
+      success: true,
+      details: 'Event deleted successfully',
+    });
+    
+});
 
 // Validation function
 const validateEvent = (event: Event): { isValid: boolean; errors: string[] } => {
