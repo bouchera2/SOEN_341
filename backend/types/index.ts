@@ -35,7 +35,20 @@ export interface AuthenticatedRequest extends Request {
 // Middleware types
 export type AuthMiddleware = (req: AuthenticatedRequest, res: Response, next: NextFunction) => void;
 
-// API Response types
+
+
+  // API Response types
+export interface ParticipationTrend {
+  period: string;
+  ticketCount: number;
+  eventCount: number;
+}
+
+export interface AnalyticsSummary {
+  totalEvents: number;
+  totalTicketsIssued: number;
+  participationTrends: ParticipationTrend[];
+}
 export interface ApiResponse<T = any> {
   success: boolean;
   data?: T;

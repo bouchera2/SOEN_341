@@ -4,6 +4,7 @@ import { fileURLToPath } from 'url';
 import cors from 'cors';
 
 import eventRoutes from './routes/events.js';
+import analyticsRoutes from './routes/analytics';
 import { ApiResponse } from './types/index.js';
 import authRoutes from './routes/authRouter.js';
 
@@ -53,7 +54,7 @@ app.get('/eventdetails', (req: Request, res: Response) => {
 });
 
 app.use('/events', eventRoutes);
-
+app.use('/events', analyticsRoutes);
 app.use('/auth', authRoutes);
 
 // Error handling middleware
