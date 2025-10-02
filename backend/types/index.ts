@@ -42,7 +42,6 @@ export interface ApiResponse<T = any> {
   error?: string;
   message?: string;
   details?: string;
-  details?: string;
 }
 
 // Error types
