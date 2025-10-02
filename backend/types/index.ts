@@ -6,6 +6,7 @@ export interface User {
   email: string;
   role: UserRole;
   name: string;
+  
 }
 
 export type UserRole = 'admin' | 'organizer' | 'student';
@@ -48,6 +49,7 @@ export interface ApiResponse<T = any> {
   data?: T;
   error?: string;
   message?: string;
+  details?: string;
 }
 
 // Error types
