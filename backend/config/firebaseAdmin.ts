@@ -3,7 +3,7 @@ import * as fs from "fs";
 import * as path from "path";
 
 if (admin.apps.length === 0) {
-  // Read service account key file
+
   const serviceAccountPath = path.join(process.cwd(), "serviceAccountKey.json");
   const serviceAccount = JSON.parse(fs.readFileSync(serviceAccountPath, "utf8"));
   
@@ -15,6 +15,4 @@ if (admin.apps.length === 0) {
   console.log("Firebase initialized with project:", serviceAccount.project_id);
 }
 
-
-export const db = admin.firestore();
-export const auth = admin.auth();
+export default admin;
