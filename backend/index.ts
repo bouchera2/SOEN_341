@@ -1,22 +1,43 @@
 import express, { Request, Response } from 'express';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
 import eventRoutes from './routes/eventsCreation.js';
 import { ApiResponse } from './types/index.js';
 
 const app = express();
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// default route
-app.get('/', (req: Request, res: Response) => {
+// Serve static files from React build directory in production
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, '../../frontend/build')));
+}
+
+// Serve React app for all non-API routes in production
+if (process.env.NODE_ENV === 'production') {
+  app.get('*', (req: Request, res: Response) => {
+    res.sendFile(path.join(__dirname, '../../frontend/build/index.html'));
+  });
+} else {
+  // Development route
+  app.get('/', (req: Request, res: Response) => {
+    res.send(`Hello world! API running in development mode.`);
+  });
+}
+
+app.get('/eventdetails', (req: Request, res: Response) => {
  
-  res.send(`Hello world !`);
+  res.send(`test`);
 
 
 });
 
-// Event routes
 app.use('/CreateEvent', eventRoutes);
 
 
