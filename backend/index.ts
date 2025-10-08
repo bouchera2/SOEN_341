@@ -1,24 +1,62 @@
 import express, { Request, Response } from 'express';
-import eventRoutes from './routes/eventsCreation.js';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import cors from 'cors';
+
+import eventRoutes from './routes/events.js';
+import eventExportRoutes from './routes/eventExports.js';
 import { ApiResponse } from './types/index.js';
+import authRoutes from './routes/authRouter.js';
 
 const app = express();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// CORS configuration - environment-aware
+const corsOptions = {
+  origin: process.env.NODE_ENV === 'production' 
+    ? ['https://yourdomain.com', 'https://www.yourdomain.com']
+    : ['http://localhost:3000', 'http://localhost:3001'],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+};
+
+app.use(cors(corsOptions));
 
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// default route
-app.get('/', (req: Request, res: Response) => {
+// Serve static files from React build directory in production
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, '../../frontend/build')));
+}
+
+// Serve React app for all non-API routes in production
+if (process.env.NODE_ENV === 'production') {
+  app.get('*', (req: Request, res: Response) => {
+    res.sendFile(path.join(__dirname, '../../frontend/build/index.html'));
+  });
+} else {
+  // Development route
+  app.get('/', (req: Request, res: Response) => {
+    res.send(`Hello world! API running in development mode.`);
+  });
+}
+
+app.get('/eventdetails', (req: Request, res: Response) => {
  
-  res.send(`Hello world !`);
+  res.send(`test`);
 
 
 });
 
-// Event routes
-app.use('/CreateEvent', eventRoutes);
+app.use('/events', eventRoutes);
+app.use('/events', eventExportRoutes);
 
+app.use('/auth', authRoutes);
 
 // Error handling middleware
 app.use((err: Error, req: Request, res: Response, next: any) => {

@@ -1,13 +1,13 @@
 import express, { Request, Response } from "express";
-import { checkEventCreationPermission } from "../middleware/auth.js";
+import { checkEventCreationPermission } from "../middleware/roleCheck.js";
 import { ApiResponse, Event } from "../types/index.js";
-import { db } from "../database/firebase.js";
+import { db } from "../database/firestore.js";
 
 
 const router = express.Router();
 
 
-router.post('/', checkEventCreationPermission, async (req: Request<{}, {}, Event>, res: Response<ApiResponse>) => {
+router.post('/create', checkEventCreationPermission, async (req: Request<{}, {}, Event>, res: Response<ApiResponse>) => {
   console.log('=== EVENT CREATION ROUTE CALLED ===');
   console.log('Request body:', req.body);
   
@@ -65,29 +65,89 @@ router.post('/', checkEventCreationPermission, async (req: Request<{}, {}, Event
 });
 
 // GET /events - Get all events
-router.get('/', (req: Request, res: Response<ApiResponse<Event[]>>) => {
-  // TODO: Get events logic here
-  res.json({
-    success: true,
-    data: [],
-    details: 'Events retrieved successfully'
+router.get('/getAll', async (req: Request, res: Response) => {
+  try {
+    const snapshot = await db.collection('events').get();
+  if (snapshot.empty) {
+    return [];
+  }
+
+  const events: Event[] = [];
+  snapshot.forEach((doc) => {
+    events.push({ id: doc.id, ...(doc.data() as Event) });
   });
+ 
+    res.json(events);
+  } catch (error) {
+    console.error('Error retrieving events:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to retrieve events',
+      details: error instanceof Error ? error.message : 'Unknown error'
+    });
+  }
 });
 
 // GET /events/:id - Get specific event
-router.get('/:id', (req: Request<{ id: string }>, res: Response<ApiResponse<Event>>) => {
+router.get('/get::id', async (req: Request<{ id: string }>, res: Response) => {
   const { id } = req.params;
-  
-  // TODO: Get specific event logic here
-  res.json({
-    success: true,
-    data: {} as Event,
-    details: `Event ${id} retrieved successfully`
-  });
+
+  try {
+    const doc = await db.collection('events').doc(id).get();
+   
+    if (!doc.exists) {
+      return res.status(404).json({
+        success: false,
+        error: 'Event not found',
+        details: `No event found with id ${id}`
+      });
+    }
+
+    const eventData = doc.data();
+    if (!eventData) {
+      return res.status(500).json({
+        success: false,
+        error: 'Failed to retrieve event',
+        details: `Event ${id} returned no data`
+      });
+    }
+
+    res.json(eventData);
+  } catch (error) {
+    console.error(`Error retrieving event ${id}:`, error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to retrieve event',
+      details: error instanceof Error ? error.message : 'Unknown error'
+    });
+  }
 });
 
 export default router;
 
+router.delete('/delete::id', async (req: Request<{ id: string }>, res: Response) =>{
+  const { id } = req.params;
+
+  //
+   
+  const doc = await db.collection('events').doc(id).get();
+   
+    if (!doc.exists) {
+      return res.status(404).json({
+        success: false,
+        error: 'Event not found',
+        details: `No event found with id ${id}`
+      });
+    }
+
+    const docDel = await db.collection('events').doc(id).delete();
+
+    res.json({ 
+      success: true,
+      details: 'Event deleted successfully',
+    });
+    
+});
 
 // Validation function
 const validateEvent = (event: Event): { isValid: boolean; errors: string[] } => {
