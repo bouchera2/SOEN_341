@@ -1,0 +1,42 @@
+name: Backend CI (no lockfiles)
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  backend-build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [20.x]  # keep this pinned for stability
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          # don't cache on lockfile since we're not using one
+          cache: 'npm'
+          cache-dependency-path: backend/package.json
+
+      - name: Clean any lockfile (defensive)
+        working-directory: backend
+        run: rm -f package-lock.json npm-shrinkwrap.json
+
+      - name: Install deps (no lockfile)
+        working-directory: backend
+        run: npm install --no-package-lock --no-audit --no-fund
+
+      - name: Build backend
+        working-directory: backend
+        run: npm run build --if-present
+
+      - name: Run tests
+        working-directory: backend
+        run: npm test --if-present
