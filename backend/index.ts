@@ -3,14 +3,18 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import cors from 'cors';
 
+import ticketsRouter from "./routes/tickets";
 import eventRoutes from './routes/events.js';
 import { ApiResponse } from './types/index.js';
 import authRoutes from './routes/authRouter.js';
+
+
 
 const app = express();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
 
 // CORS configuration - environment-aware
 const corsOptions = {
@@ -22,11 +26,15 @@ const corsOptions = {
   allowedHeaders: ['Content-Type', 'Authorization']
 };
 
+
 app.use(cors(corsOptions));
 
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+//tickets routes
+app.use("/tickets", ticketsRouter);
 
 // Serve static files from React build directory in production
 if (process.env.NODE_ENV === 'production') {
@@ -52,9 +60,12 @@ app.get('/eventdetails', (req: Request, res: Response) => {
 
 });
 
+
+
 app.use('/events', eventRoutes);
 
 app.use('/auth', authRoutes);
+
 
 // Error handling middleware
 app.use((err: Error, req: Request, res: Response, next: any) => {
@@ -77,3 +88,4 @@ const port = parseInt(process.env.PORT || '3002');
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
 });
+
