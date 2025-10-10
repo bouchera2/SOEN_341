@@ -1,54 +1,83 @@
+// backend/types/index.ts
 import { Request, Response, NextFunction } from 'express';
 import { DecodedIdToken } from 'firebase-admin/auth';
 
+// --- User roles ---
 export type UserRole = 'admin' | 'organizer' | 'student';
 
-
-
+// --- Event model ---
 export interface Event {
-  // Core required fields
   title: string;
   description: string;
-  date: string; // ISO string for consistency
+  date: string; // ISO string
   location: string;
-  organizer: string; // organizer ID
-  
+  organizer: string;
 
   time?: string;
-  attendees?: string[]; // Array of student IDs
-  tags?: string[]; // Tags for event sorting
+  attendees?: string[];
+  tags?: string[];
   type: 'paid' | 'free';
-  capacity?: number; // Event capacity
-  bookedCount?: number; // How many users have signed up
-  
-  // Auto-generated fields (only present when saved to database)
+  capacity?: number;
+  bookedCount?: number;
+
   id?: string;
   createdAt?: Date;
   updatedAt?: Date;
 }
 
-// Express types with custom properties
+// --- User profile info ---
+export interface UserProfile {
+  name?: string;
+  studentId?: string;
+  email?: string;
+}
+
+// --- Express custom request ---
 export interface AuthenticatedRequest extends Request {
   user?: DecodedIdToken;
 }
 
-// Middleware types
-export type AuthMiddleware = (req: AuthenticatedRequest, res: Response, next: NextFunction) => void;
+// --- Middleware function type ---
+export type AuthMiddleware = (
+    req: AuthenticatedRequest,
+    res: Response,
+    next: NextFunction
+) => void;
 
+// ✅ NEW: Top event entry (for the top 3 events per trend)
+export interface TopEvent {
+  id: string;
+  title: string;
+  ticketCount: number;
+}
 
-
-  // API Response types
+// --- Participation trend ---
 export interface ParticipationTrend {
   period: string;
   ticketCount: number;
   eventCount: number;
+
+  // ✅ NEW: add this field for top 3 events inside each trend
+  topEvents?: TopEvent[];
 }
 
+// --- Analytics summary ---
 export interface AnalyticsSummary {
   totalEvents: number;
   totalTicketsIssued: number;
   participationTrends: ParticipationTrend[];
 }
+
+// --- Event analytics for per-event route ---
+export interface EventAnalytics {
+  eventId: string;
+  ticketsIssued: number;
+  attendedCount: number;
+  attendanceRate: number;
+  remainingCapacity: number;
+}
+
+// --- Generic API response wrapper ---
 export interface ApiResponse<T = any> {
   success: boolean;
   data?: T;
@@ -57,7 +86,7 @@ export interface ApiResponse<T = any> {
   details?: string;
 }
 
-// Error types
+// --- Error model ---
 export interface ApiError extends Error {
   statusCode: number;
   isOperational: boolean;
