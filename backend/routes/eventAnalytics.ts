@@ -49,7 +49,7 @@ router.get('/:id/analytics',checkUserAuthToken, async (req: AuthenticatedRequest
 
         const remainingCapacity = capacity - ticketsIssued;
 
-        // ✅ This is where you add the satisfies check:
+        //  This is where you add the satisfies check:
         res.status(200).json({
             success: true,
             data: {
