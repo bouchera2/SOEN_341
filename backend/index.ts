@@ -5,6 +5,7 @@ import cors from 'cors';
 
 import ticketsRouter from "./routes/tickets";
 import eventRoutes from './routes/events.js';
+import eventExportRoutes from './routes/eventExports.js';
 import { ApiResponse } from './types/index.js';
 import authRoutes from './routes/authRouter.js';
 
@@ -63,6 +64,7 @@ app.get('/eventdetails', (req: Request, res: Response) => {
 
 
 app.use('/events', eventRoutes);
+app.use('/events', eventExportRoutes);
 
 app.use('/auth', authRoutes);
 

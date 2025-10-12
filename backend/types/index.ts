@@ -35,6 +35,12 @@ export interface AuthenticatedRequest extends Request {
 // Middleware types
 export type AuthMiddleware = (req: AuthenticatedRequest, res: Response, next: NextFunction) => void;
 
+export interface UserProfile {
+  name?: string;
+  studentId?: string;
+  email?: string;
+}
+
 // API Response types
 export interface ApiResponse<T = any> {
   success: boolean;
