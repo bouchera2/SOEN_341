@@ -1,101 +1,92 @@
-import React, { useState } from 'react';
-import { useAuth } from '../hooks/useAuth';
+import React, { useState } from "react";
+import { auth, googleProvider } from "../services/firebase";
+import {
+  signInWithPopup,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+} from "firebase/auth";
 
-export function ModernAuthUI() {
-  const { user, loading, signIn, signUp, signInWithGoogle, logout } = useAuth();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [isSignUp, setIsSignUp] = useState(false);
-  const [error, setError] = useState('');
+export const ModernAuthUI: React.FC = () => {
+  const [isSignup, setIsSignup] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError('');
-    
+  const handleEmailAuth = async () => {
+    setError(null);
     try {
-      if (isSignUp) {
-        await signUp(email, password);
-        
-        alert('Account created successfully!');
-        setEmail('');
-        setPassword('');
+      if (isSignup) {
+        await createUserWithEmailAndPassword(auth, email, password);
       } else {
-        await signIn(email, password);
-        
-        alert('Welcome back!');
+        await signInWithEmailAndPassword(auth, email, password);
       }
-    } catch (error: any) {
-      setError(error.message);
+    } catch (err: any) {
+      setError(err.message);
     }
   };
 
   const handleGoogleSignIn = async () => {
-    setError('');
     try {
-      await signInWithGoogle();
-      
-      alert('Signed in with Google successfully!');
-    } catch (error: any) {
-      setError(error.message);
+      await signInWithPopup(auth, googleProvider);
+    } catch (err: any) {
+      setError(err.message);
     }
   };
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (user) {
-    return (
-      <div>
-        <h3>Welcome, {user.email}!</h3>
-        <button onClick={logout}>Sign Out</button>
-      </div>
-    );
-  }
-
   return (
-    <div>
-      <h3>{isSignUp ? 'Sign Up' : 'Sign In'}</h3>
-      
-      {error && <div style={{ color: 'red' }}>{error}</div>}
-      
-      <form onSubmit={handleSubmit}>
-        <div>
-          <input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <button type="submit">
-            {isSignUp ? 'Sign Up' : 'Sign In'}
-          </button>
-        </div>
-      </form>
-      
-      <div>
-        <button onClick={handleGoogleSignIn}>
-          Sign in with Google
-        </button>
-      </div>
-      
-      <div>
-        <button onClick={() => setIsSignUp(!isSignUp)}>
-          {isSignUp ? 'Already have an account? Sign In' : 'Need an account? Sign Up'}
-        </button>
+    <div className="modern-auth">
+      <h2 className="auth-title">
+        {isSignup ? "Create an Account" : "Welcome Back"}
+      </h2>
+
+      <input
+        className="auth-input"
+        type="email"
+        placeholder="Email address"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+      />
+      <input
+        className="auth-input"
+        type="password"
+        placeholder="Password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+      />
+
+      {error && <p style={{ color: "red", fontSize: "14px" }}>{error}</p>}
+
+      <button className="gradient-btn" onClick={handleEmailAuth}>
+        {isSignup ? "Sign Up" : "Sign In"}
+      </button>
+
+      {/* ✅ OFFICIAL GOOGLE SIGN-IN BUTTON */}
+      <button className="google-btn" onClick={handleGoogleSignIn}>
+        <img
+          src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+          alt="Google logo"
+          className="google-logo"
+        />
+        Continue with Google
+      </button>
+
+      <div className="auth-footer">
+        {isSignup ? (
+          <p>
+            Already have an account?{" "}
+            <a href="#" onClick={() => setIsSignup(false)}>
+              Sign In
+            </a>
+          </p>
+        ) : (
+          <p>
+            Don’t have an account?{" "}
+            <a href="#" onClick={() => setIsSignup(true)}>
+              Sign Up
+            </a>
+          </p>
+        )}
       </div>
     </div>
   );
-}
+};

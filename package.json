@@ -16,10 +16,16 @@
     "test:frontend": "cd frontend && npm test"
   },
   "devDependencies": {
-    "concurrently": "^8.2.2"
+    "@types/express": "^5.0.3",
+    "@types/node": "^24.6.2",
+    "concurrently": "^8.2.2",
+    "nodemon": "^3.1.10",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
   },
   "dependencies": {
     "dotenv": "^17.2.2",
+    "express": "^5.1.0",
     "firebase-admin": "^13.5.0"
   }
 }
