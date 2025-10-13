@@ -5,9 +5,11 @@ import cors from 'cors';
 
 import ticketsRouter from "./routes/tickets";
 import eventRoutes from './routes/events.js';
+import analyticsRoutes from './routes/analytics';
+import eventAnalyticsRoutes from './routes/eventAnalytics.js';
 import eventExportRoutes from './routes/eventExports.js';
-import { ApiResponse } from './types/index.js';
 import authRoutes from './routes/authRouter.js';
+import { ApiResponse } from './types/index.js';
 
 
 
@@ -64,8 +66,9 @@ app.get('/eventdetails', (req: Request, res: Response) => {
 
 
 app.use('/events', eventRoutes);
+app.use('/events', eventAnalyticsRoutes);
 app.use('/events', eventExportRoutes);
-
+app.use('/events/analytics', analyticsRoutes);
 app.use('/auth', authRoutes);
 
 
