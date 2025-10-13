@@ -15,12 +15,19 @@
     "sourceMap": true,
     "resolveJsonModule": true,
     "allowImportingTsExtensions": false,
-    "noEmit": false,
-    "typeRoots": [
-      "./node_modules/@types",
-      "./@types"
-    ]
+    "noEmit": false
   },
-  "include": ["src", "@types"],
-  "exclude": ["node_modules"]
+  "include": [
+    "**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "**/*.test.ts",
+    "**/*.spec.ts"
+  ],
+  "ts-node": {
+    "esm": true,
+    "experimentalSpecifierResolution": "node"
+  }
 }
