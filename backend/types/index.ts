@@ -19,6 +19,7 @@ export interface Event {
   type: 'paid' | 'free';
   capacity?: number;
   bookedCount?: number;
+  imageUrl?: string; // URL to image stored in Firebase Storage
 
   id?: string;
   createdAt?: Date;
@@ -35,6 +36,7 @@ export interface UserProfile {
 // --- Express custom request ---
 export interface AuthenticatedRequest extends Request {
   user?: DecodedIdToken;
+  userRole?: UserRole; // Added to store user role from middleware
 }
 
 // --- Middleware function type ---

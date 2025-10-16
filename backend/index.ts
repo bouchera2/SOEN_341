@@ -9,6 +9,10 @@ import analyticsRoutes from './routes/analytics';
 import eventAnalyticsRoutes from './routes/eventAnalytics.js';
 import eventExportRoutes from './routes/eventExports.js';
 import authRoutes from './routes/authRouter.js';
+import permissionsRoutes from './routes/permissions.js';
+import imagesRoutes from './routes/images.js';
+import userRoleRoutes from './routes/userRole.js';
+import organizerRequestsRouter from './routes/organizerRequests.js';
 import { ApiResponse } from './types/index.js';
 
 
@@ -70,6 +74,10 @@ app.use('/events', eventAnalyticsRoutes);
 app.use('/events', eventExportRoutes);
 app.use('/events/analytics', analyticsRoutes);
 app.use('/auth', authRoutes);
+app.use('/permissions', permissionsRoutes);
+app.use('/images', imagesRoutes);
+app.use('/userRole', userRoleRoutes);
+app.use('/organizer-requests', organizerRequestsRouter);
 
 
 // Error handling middleware

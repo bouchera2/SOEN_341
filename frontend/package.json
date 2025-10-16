@@ -13,6 +13,7 @@
     "firebaseui": "^6.1.0",
     "framer-motion": "^12.23.22",
     "html5-qrcode": "^2.3.8",
+    "jsqr": "^1.4.0",
     "lodash": "^4.17.21",
     "qr-scanner": "^1.4.2",
     "qrcode": "^1.5.3",

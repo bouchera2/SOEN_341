@@ -24,7 +24,8 @@
     "dotenv": "^17.2.3",
     "express": "^4.21.2",
     "firebase-admin": "^13.5.0",
-    "qrcode": "^1.5.4"
+    "qrcode": "^1.5.4",
+    "qrcode-decoder": "^0.3.4"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",

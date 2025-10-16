@@ -41,7 +41,7 @@ router.get('/:id/analytics',checkUserAuthToken, async (req: AuthenticatedRequest
             ? event.bookedCount
             : attendees.length;
 
-        const attendedCount = attendees.filter((a: any) => a.checkedIn === true).length;
+        const attendedCount = attendees.filter((a: any) => a.claimed === true).length;
 
         const attendanceRate = ticketsIssued > 0
             ? parseFloat(((attendedCount / ticketsIssued) * 100).toFixed(2))

@@ -7,6 +7,11 @@ import EventDashboard from "./pages/EventDashboard";
 
 const router = createBrowserRouter([
   { path: "/", element: <App /> },
+  { path: "/myevents", element: <App /> },
+  { path: "/profile", element: <App /> },
+  { path: "/create-event", element: <App /> },
+  { path: "/manage-events", element: <App /> },
+  { path: "/admin", element: <App /> },
   { path: "/organizer/events/:id/dashboard", element: <EventDashboard /> },
 ]);
 
