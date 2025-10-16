@@ -54,7 +54,7 @@ router.get('/:eventId/export-attendees', checkUserAuthToken, async (req: Authent
 
     const rows: ExportRow[] = attendeeProfiles.map(({ id, profile }) => {
       // Handle different possible field names from Firebase Auth
-      const name = toCsvField(profile?.name) || toCsvField(profile?.displayName) || id;
+      const name = toCsvField(profile?.name) || id;
       const studentId = toCsvField(profile?.studentId) || 'N/A';
       const email = toCsvField(profile?.email) || 'N/A';
       
