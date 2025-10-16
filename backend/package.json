@@ -20,10 +20,12 @@
   "author": "Google LLC",
   "license": "Apache-2.0",
   "dependencies": {
+    "@types/multer": "^2.0.0",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^4.21.2",
     "firebase-admin": "^13.5.0",
+    "multer": "^2.0.2",
     "qrcode": "^1.5.4",
     "qrcode-decoder": "^0.3.4"
   },

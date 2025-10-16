@@ -37,7 +37,7 @@ export interface UserProfile {
 export interface AuthenticatedRequest extends Request {
   user?: DecodedIdToken;
   userRole?: UserRole; // Added to store user role from middleware
-  file?: Express.Multer.File; // For multer file uploads
+  file?: any; // For multer file uploads
 }
 
 // --- Middleware function type ---

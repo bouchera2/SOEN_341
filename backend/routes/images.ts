@@ -12,7 +12,7 @@ const upload = multer({
   limits: {
     fileSize: 5 * 1024 * 1024, // 5MB limit
   },
-  fileFilter: (req: any, file: Express.Multer.File, cb: any) => {
+  fileFilter: (req: any, file: any, cb: any) => {
     // Check file type
     const allowedTypes = /jpeg|jpg|png|gif|webp/;
     const extname = allowedTypes.test(file.originalname.toLowerCase());
