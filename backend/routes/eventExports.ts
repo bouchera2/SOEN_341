@@ -12,7 +12,7 @@ interface ExportRow {
   email: string;
 }
 
-router.get('/:eventId/export-attendees', checkUserAuthToken, async (req: AuthenticatedRequest, res: Response<ApiResponse>) => {
+router.get('/:eventId/export-attendees', checkUserAuthToken, async (req: AuthenticatedRequest, res: Response) => {
   const { eventId } = req.params;
 
   try {
