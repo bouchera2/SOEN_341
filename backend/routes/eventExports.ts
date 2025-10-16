@@ -1,6 +1,8 @@
 import express, { Request, Response } from "express";
 import { db } from "../database/firestore.js";
 import { Event, UserProfile } from "../types/index.js";
+import { checkUserAuthToken } from "../middleware/userAuth.js";
+import { AuthenticatedRequest, ApiResponse } from "../types/index.js";
 
 const router = express.Router();
 
@@ -10,7 +12,7 @@ interface ExportRow {
   email: string;
 }
 
-router.get('/:eventId/export-attendees', async (req: Request<{ eventId: string }>, res: Response) => {
+router.get('/:eventId/export-attendees', checkUserAuthToken, async (req: AuthenticatedRequest, res: Response) => {
   const { eventId } = req.params;
 
   try {
@@ -33,24 +35,54 @@ router.get('/:eventId/export-attendees', async (req: Request<{ eventId: string }
     }
 
     const attendeeIds = Array.isArray(eventData.attendees) ? eventData.attendees : [];
+    
+    console.log(`🔍 CSV Export Debug - Event ID: ${eventId}`);
+    console.log(`🔍 Event attendees array:`, attendeeIds);
+    console.log(`🔍 Number of attendees: ${attendeeIds.length}`);
 
     const attendeeProfiles = await Promise.all(
       attendeeIds.map(async (attendeeId) => {
         const userDoc = await db.collection('users').doc(attendeeId).get();
+        const profile = userDoc.exists ? (userDoc.data() as UserProfile | undefined) : undefined;
+        console.log(`🔍 User ${attendeeId} profile:`, profile);
         return {
           id: attendeeId,
-          profile: userDoc.exists ? (userDoc.data() as UserProfile | undefined) : undefined
+          profile
         };
       })
     );
 
-    const rows: ExportRow[] = attendeeProfiles.map(({ id, profile }) => ({
-      name: toCsvField(profile?.name) ?? id,
-      studentId: toCsvField(profile?.studentId) ?? 'N/A',
-      email: toCsvField(profile?.email) ?? 'N/A'
-    }));
+    const rows: ExportRow[] = attendeeProfiles.map(({ id, profile }) => {
+      // Handle different possible field names from Firebase Auth
+      const name = toCsvField(profile?.name) || id;
+      const studentId = toCsvField(profile?.studentId) || 'N/A';
+      const email = toCsvField(profile?.email) || 'N/A';
+      
+      console.log(`🔍 Processing user ${id}:`, { name, studentId, email });
+      
+      return {
+        name,
+        studentId,
+        email
+      };
+    });
+
+    console.log(`🔍 Final CSV rows:`, rows);
+    console.log(`🔍 Number of CSV rows: ${rows.length}`);
 
     const csv = buildCsv(rows);
+    console.log(`🔍 Generated CSV content:`, csv);
+    
+    // If no attendees, return a CSV with just headers
+    if (rows.length === 0) {
+      console.log(`⚠️ No attendees found for event ${eventId}`);
+      const emptyCsv = 'name,studentId,email\n';
+      res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+      res.setHeader('Content-Disposition', `attachment; filename="event-${eventId}-attendees.csv"`);
+      res.status(200).send(emptyCsv);
+      return;
+    }
+    
     res.setHeader('Content-Type', 'text/csv; charset=utf-8');
     res.setHeader('Content-Disposition', `attachment; filename="event-${eventId}-attendees.csv"`);
     res.status(200).send(csv);

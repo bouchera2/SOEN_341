@@ -21,12 +21,12 @@ export default function QRUploadValidator() {
         return;
       }
 
-      if (snap.data().checkedIn) {
+      if (snap.data().claimed) {
         setResult("Ticket already used");
         return;
       }
 
-      await updateDoc(ref, { checkedIn: true });
+      await updateDoc(ref, { claimed: true });
       setResult("Ticket validated!");
     } catch (err) {
       console.error(err);

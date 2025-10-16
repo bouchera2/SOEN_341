@@ -70,7 +70,8 @@ dist
 
 # Gatsby files
 .cache/
-public
+# Only ignore root-level public directory, not frontend/public
+/public
 
 # Storybook build outputs
 .out

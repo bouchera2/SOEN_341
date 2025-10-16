@@ -41,7 +41,23 @@ router.get('/signup', checkUserAuthToken, async (req: AuthenticatedRequest, res:
     }
 
    
-    await db.collection('users').doc(req.user.uid).set({...req.user, role: 'student', createdAt: new Date(), lastLogin: new Date()});
+    // For testing purposes, set some users as organizers/admins based on email
+    const email = req.user.email || '';
+    let role = 'student';
+    if (email.includes('admin')) {
+      role = 'admin';
+    } else if (email.includes('organizer')) {
+      role = 'organizer';
+    }
+    
+    await db.collection('users').doc(req.user.uid).set({
+      ...req.user, 
+      role: role, 
+      createdAt: new Date(), 
+      lastLogin: new Date()
+    });
+    
+    console.log(`✅ User created with role: ${role} for email: ${email}`);
 
     return res.status(200).json({
         success: true,

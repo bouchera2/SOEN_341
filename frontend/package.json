@@ -5,6 +5,7 @@
   "private": true,
   "dependencies": {
     "@campus-events/shared": "file:../shared",
+    "@types/multer": "^2.0.0",
     "axios": "^1.6.2",
     "bootstrap": "^5.3.8",
     "classnames": "^2.5.1",
@@ -13,7 +14,9 @@
     "firebaseui": "^6.1.0",
     "framer-motion": "^12.23.22",
     "html5-qrcode": "^2.3.8",
+    "jsqr": "^1.4.0",
     "lodash": "^4.17.21",
+    "multer": "^2.0.2",
     "qr-scanner": "^1.4.2",
     "qrcode": "^1.5.3",
     "react": "^18.3.1",
