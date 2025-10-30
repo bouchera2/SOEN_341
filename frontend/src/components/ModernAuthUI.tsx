@@ -1,24 +1,20 @@
 import React, { useState } from "react";
-import { auth, googleProvider } from "../services/firebase";
-import {
-  signInWithPopup,
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-} from "firebase/auth";
+import { useAuth } from "../hooks/useAuth"; 
 
 export const ModernAuthUI: React.FC = () => {
   const [isSignup, setIsSignup] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const {signIn, signUp, signInWithGoogle} = useAuth();
 
   const handleEmailAuth = async () => {
     setError(null);
     try {
       if (isSignup) {
-        await createUserWithEmailAndPassword(auth, email, password);
+        await signUp(email, password)
       } else {
-        await signInWithEmailAndPassword(auth, email, password);
+        await signIn(email, password);
       }
     } catch (err: any) {
       setError(err.message);
@@ -27,7 +23,7 @@ export const ModernAuthUI: React.FC = () => {
 
   const handleGoogleSignIn = async () => {
     try {
-      await signInWithPopup(auth, googleProvider);
+      await signInWithGoogle();
     } catch (err: any) {
       setError(err.message);
     }
