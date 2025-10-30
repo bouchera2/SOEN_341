@@ -1,104 +1,69 @@
-import express, { Request, Response } from 'express';
-import path from 'path';
-import { fileURLToPath } from 'url';
-import cors from 'cors';
+// backend/index.ts
+import express, { Request, Response } from "express";
+import path from "path";
+import { fileURLToPath } from "url";
+import cors from "cors";
+import dotenv from "dotenv";
 
-import ticketsRouter from "./routes/tickets";
-import eventRoutes from './routes/events.js';
-import analyticsRoutes from './routes/analytics';
-import eventAnalyticsRoutes from './routes/eventAnalytics.js';
-import eventExportRoutes from './routes/eventExports.js';
-import authRoutes from './routes/authRouter.js';
-import permissionsRoutes from './routes/permissions.js';
-import imagesRoutes from './routes/images.js';
-import userRoleRoutes from './routes/userRole.js';
-import organizerRequestsRouter from './routes/organizerRequests.js';
-import { ApiResponse } from './types/index.js';
+// Other routers (keep your existing imports; IMPORTANT: use .js for the ones that are already compiled to JS at runtime)
+import ticketsRouter from "./routes/tickets.js";
+import eventRoutes from "./routes/events.js";
+import analyticsRoutes from "./routes/analytics.js";
+import eventAnalyticsRoutes from "./routes/eventAnalytics.js";
+import eventExportRoutes from "./routes/eventExports.js";
+import authRoutes from "./routes/authRouter.js";
+import permissionsRoutes from "./routes/permissions.js";
+import imagesRoutes from "./routes/images.js";
+import userRoleRoutes from "./routes/userRole.js";
+import organizerRequestsRouter from "./routes/organizerRequests.js";
 
+// 👇 For TSX + ESM + NodeNext, import the TS file WITH .ts extension.
+// TSX will handle it. This bypasses Node’s “must-be-real-.js-on-disk” rule.
+import chatRouter from "./routes/chat";
 
+dotenv.config();
 
 const app = express();
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// CORS
+app.use(
+  cors({
+    origin: ["http://localhost:3000", "http://localhost:5173"],
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true,
+  })
+);
 
-// CORS configuration - environment-aware
-const corsOptions = {
-  origin: process.env.NODE_ENV === 'production' 
-    ? ['https://yourdomain.com', 'https://www.yourdomain.com']
-    : ['http://localhost:3000', 'http://localhost:3001'],
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-};
-
-
-app.use(cors(corsOptions));
-
-// Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-//tickets routes
+app.get("/", (_req: Request, res: Response) => {
+  res.send("✅ Backend ConcoEvents running on port 3002");
+});
+
+// Your routes
 app.use("/tickets", ticketsRouter);
+app.use("/events", eventRoutes);
+app.use("/events", eventAnalyticsRoutes);
+app.use("/events", eventExportRoutes);
+app.use("/events/analytics", analyticsRoutes);
+app.use("/auth", authRoutes);
+app.use("/permissions", permissionsRoutes);
+app.use("/images", imagesRoutes);
+app.use("/userRole", userRoleRoutes);
+app.use("/organizer-requests", organizerRequestsRouter);
 
-// Serve static files from React build directory in production
-if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, '../../frontend/build')));
-}
+// 👇 Mount the chat router at root. The route itself is /api/chat inside chat.ts
+app.use("/", chatRouter);
 
-// Serve React app for all non-API routes in production
-if (process.env.NODE_ENV === 'production') {
-  app.get('*', (req: Request, res: Response) => {
-    res.sendFile(path.join(__dirname, '../../frontend/build/index.html'));
-  });
-} else {
-  // Development route
-  app.get('/', (req: Request, res: Response) => {
-    res.send(`Hello world! API running in development mode.`);
-  });
-}
-
-app.get('/eventdetails', (req: Request, res: Response) => {
- 
-  res.send(`test`);
-
-
+app.use("*", (_req: Request, res: Response) => {
+  res.status(404).json({ success: false, error: "Route not found" });
 });
 
-
-
-app.use('/events', eventRoutes);
-app.use('/events', eventAnalyticsRoutes);
-app.use('/events', eventExportRoutes);
-app.use('/events/analytics', analyticsRoutes);
-app.use('/auth', authRoutes);
-app.use('/permissions', permissionsRoutes);
-app.use('/images', imagesRoutes);
-app.use('/userRole', userRoleRoutes);
-app.use('/organizer-requests', organizerRequestsRouter);
-
-
-// Error handling middleware
-app.use((err: Error, req: Request, res: Response, next: any) => {
-  console.error(err.stack);
-  res.status(500).json({
-    success: false,
-    error: 'Something went wrong!'
-  } as ApiResponse);
-});
-
-// 404 handler
-app.use('*', (req: Request, res: Response) => {
-  res.status(404).json({
-    success: false,
-    error: 'Route not found'
-  } as ApiResponse);
-});
-
-const port = parseInt(process.env.PORT || '3002'); 
+const port = parseInt(process.env.PORT || "3002", 10);
 app.listen(port, () => {
-  console.log(`Server listening on port ${port}`);
+  console.log(`🚀 Server running on http://localhost:${port}`);
 });
-

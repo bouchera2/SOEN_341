@@ -14,11 +14,13 @@
     "declarationMap": true,
     "sourceMap": true,
     "resolveJsonModule": true,
-    "allowImportingTsExtensions": false,
-    "noEmit": false
+    "noEmit": true,
+    "allowImportingTsExtensions": true
+
+
   },
   "include": [
-    "**/*.ts"
+    "./**/*.ts"
   ],
   "exclude": [
     "node_modules",
