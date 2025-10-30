@@ -5,7 +5,7 @@ import { getFirestore } from "firebase/firestore";
 
 // ✅ Your Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyDROxAwSvVKzQdC2H63G9CAVOHuKldegnY",
+  apiKey: "AIzaSyA9a5WLQcM4uukRrOmIDzmIsJFZk9LTP78",
   authDomain: "concoevents.firebaseapp.com",
   databaseURL: "https://concoevents-default-rtdb.firebaseio.com",
   projectId: "concoevents",
