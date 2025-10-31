@@ -13,6 +13,7 @@ import LoginPage from "./components/pages/LoginPage";
 import AdminPage from "./components/pages/AdminPage";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import ChatToggle from "./components/ChatToggle"; // ✅ seul point d’entrée du chat
 
 function App() {
   const { user } = useAuth();
@@ -27,25 +28,16 @@ function App() {
     return matchesCategory && matchesSearch;
   });
 
-  // LOGIN PAGE
-  if (!user) {
-    return <LoginPage />;
-  }
+  if (!user) return <LoginPage />;
 
-  // RENDER COMPONENT BASED ON ROUTE
   const renderCurrentPage = () => {
     switch (location.pathname) {
-      case '/myevents':
-        return <MyEventsPage />;
-      case '/profile':
-        return <ProfilePage />;
-      case '/create-event':
-        return <CreateEventForm />;
-      case '/manage-events':
-        return <ManageEventsPage />;
-      case '/admin':
-        return <AdminPage />;
-      case '/':
+      case "/myevents": return <MyEventsPage />;
+      case "/profile": return <ProfilePage />;
+      case "/create-event": return <CreateEventForm />;
+      case "/manage-events": return <ManageEventsPage />;
+      case "/admin": return <AdminPage />;
+      case "/":
       default:
         return (
           <HomePage
@@ -60,15 +52,11 @@ function App() {
     }
   };
 
-  // MAIN APP (AFTER LOGIN)
   return (
     <div className="App">
-      <Navbar 
-        searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
-      />
-      
+      <Navbar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
       {renderCurrentPage()}
+      <ChatToggle /> {/* ✅ exactement UNE seule fois */}
     </div>
   );
 }
