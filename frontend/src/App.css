@@ -3229,3 +3229,94 @@ body {
     height: 150px;
   }
 }
+/* -------------------- CHATBOX FIX -------------------- */
+#root, .App, body {
+  overflow: visible !important;
+  position: static !important;
+  isolation: auto !important;
+}
+
+/* Make sure chat stays on top of everything */
+.chatbox-container, .chat-toggle-button {
+  position: fixed !important;
+  z-index: 999999 !important;
+  pointer-events: auto !important;
+}
+
+/* Optional subtle entrance animation */
+@keyframes chatboxSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.chatbox-container {
+  animation: chatboxSlideUp 0.3s ease-out;
+}
+/* ======== FIX CHATBOX POSITION ======== */
+.chatbox-container,
+.chat-toggle-button {
+  position: fixed !important;
+  z-index: 999999 !important;
+}
+
+/* Place chatbox exactly at bottom-right */
+.chatbox-container {
+  bottom: 100px !important; /* space above toggle button */
+  right: 32px !important;
+  left: auto !important;
+  top: auto !important;
+  transform: none !important;
+}
+
+/* Place toggle button at bottom-right corner */
+.chat-toggle-button {
+  bottom: 24px !important;
+  right: 24px !important;
+  top: auto !important;
+  left: auto !important;
+}
+
+/* Make sure no parent container interferes */
+.App,
+body,
+#root {
+  position: static !important;
+  overflow: visible !important;
+  isolation: auto !important;
+}
+
+/* === Chatbox Global Fixes === */
+.chatbox-container {
+  position: fixed !important;
+  bottom: 1.5rem !important;
+  right: 1.5rem !important;
+  z-index: 999999 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+html, body, #root {
+  height: 100%;
+  overflow-x: hidden;
+}
+
+/* Prevent parent containers from hiding the chat */
+.App {
+  position: relative;
+  z-index: 0;
+}
+
+.chatbox-container {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  opacity: 1;
+  z-index: 999999;
+}
+

@@ -1,11 +1,14 @@
-import express, { Request, Response } from 'express';
+import dotenv from "dotenv";
+
+dotenv.config();
+
+import express, { type Request, type Response } from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import cors from 'cors';
-
-import ticketsRouter from "./routes/tickets";
+import ticketsRouter from "./routes/tickets.js";
 import eventRoutes from './routes/events.js';
-import analyticsRoutes from './routes/analytics';
+import analyticsRoutes from './routes/analytics.js';
 import eventAnalyticsRoutes from './routes/eventAnalytics.js';
 import eventExportRoutes from './routes/eventExports.js';
 import authRoutes from './routes/authRouter.js';
@@ -13,8 +16,8 @@ import permissionsRoutes from './routes/permissions.js';
 import imagesRoutes from './routes/images.js';
 import userRoleRoutes from './routes/userRole.js';
 import organizerRequestsRouter from './routes/organizerRequests.js';
-import { ApiResponse } from './types/index.js';
-
+import type { ApiResponse } from './types/index.js';
+import chatRoute from "./routes/chat.js"; 
 
 
 const app = express();
@@ -22,6 +25,7 @@ const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+console.log("✅ Loaded OpenAI Key:", process.env.OPENAI_API_KEY ? "Yes" : "No");
 
 // CORS configuration - environment-aware
 const corsOptions = {
@@ -42,6 +46,8 @@ app.use(express.urlencoded({ extended: true }));
 
 //tickets routes
 app.use("/tickets", ticketsRouter);
+
+app.use("/api", chatRoute);
 
 // Serve static files from React build directory in production
 if (process.env.NODE_ENV === 'production') {

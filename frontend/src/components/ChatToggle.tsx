@@ -1,0 +1,23 @@
+import React, { useState } from "react";
+import ChatBox from "./ChatBox";
+import { MessageCircle, X } from "lucide-react";
+
+const ChatToggle: React.FC = () => {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <>
+      {open && <ChatBox />}
+      <button
+        onClick={() => setOpen(!open)}
+        className="chat-toggle-button fixed bottom-6 right-6 bg-gradient-to-r from-indigo-600 to-purple-600 
+                   hover:from-indigo-700 hover:to-purple-700 text-white p-4 rounded-full shadow-lg 
+                   transition-all duration-300 transform hover:scale-110 focus:outline-none z-[999999]"
+      >
+        {open ? <X size={26} /> : <MessageCircle size={26} />}
+      </button>
+    </>
+  );
+};
+
+export default ChatToggle;
