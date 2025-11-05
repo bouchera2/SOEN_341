@@ -20,7 +20,7 @@ const ChatBox: React.FC = () => {
     setInput("");
 
     try {
-      const response = await fetch("http://localhost:3002/chatbot", {
+      const response = await fetch("http://localhost:3002/api/chatbot", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: input }),
@@ -75,7 +75,7 @@ const ChatBox: React.FC = () => {
             <div
               className={`px-4 py-2 rounded-2xl max-w-[80%] break-words text-sm ${
                 msg.sender === "user"
-                  ? "bg-indigo-600 text-white rounded-br-none"
+                  ? "bg-indigo-600 text-black rounded-br-none"
                   : "bg-gray-200 text-gray-800 rounded-bl-none"
               }`}
             >
