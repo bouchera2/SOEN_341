@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Send } from "lucide-react";
+import botLogo from "../assets/olivia-logo.png";
 
 const ChatBox: React.FC = () => {
   const [messages, setMessages] = useState<{ text: string; sender: string }[]>([
-    { text: "Hi there! 👋 How can I help you today?", sender: "bot" },
+    { text: "Hi there! 👋 I'm Olivia, your campus assistant.?", sender: "bot" },
   ]);
   const [input, setInput] = useState("");
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
@@ -59,7 +60,7 @@ const ChatBox: React.FC = () => {
                  flex flex-col overflow-hidden z-[999999]"
     >
       {/* Header */}
-      <div className="bg-gray-100 text-black text-lg font-semibold p-3 border-b border-gray-300">
+      <div className="bg-gray-300 text-black text-lg font-semibold p-3 border-b border-gray-800">
         Campus Chatbot 💬
       </div>
 
@@ -72,6 +73,13 @@ const ChatBox: React.FC = () => {
               msg.sender === "user" ? "justify-end" : "justify-start"
             }`}
           >
+                 {msg.sender === "bot" && (
+              <img
+            src={botLogo}
+            alt="Olivia"
+            style={{ width: "22px", height: "22px", borderRadius: "50%", marginRight: "6px", objectFit: "cover" }}
+        />
+      )}
             <div
               className={`px-4 py-2 rounded-2xl max-w-[80%] break-words text-sm ${
                 msg.sender === "user"
@@ -98,7 +106,7 @@ const ChatBox: React.FC = () => {
         />
         <button
           onClick={sendMessage}
-          className="bg-indigo-600 hover:bg-indigo-700 text-white p-2 rounded-full flex items-center justify-center"
+          className="bg-indigo-600 hover:bg-indigo-700 text-white p-2 rounded-full "
         >
           <Send size={18} />
         </button>

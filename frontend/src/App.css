@@ -3320,3 +3320,20 @@ html, body, #root {
   z-index: 999999;
 }
 
+/* -------------------- CHAT BUTTON SIZE FIX -------------------- */
+.chat-toggle-button {
+  width: 56px !important;   /* Adjust as needed: 56px ≈ Tailwind w-14 */
+  height: 56px !important;  /* Match height for perfect circle */
+  padding: 0 !important;    /* Override Tailwind padding */
+  display: flex !important; /* Center content */
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: 9999px !important; /* Make sure it stays round */
+}
+.chat-toggle-button img {
+  width: 32px !important;   /* Olivia logo size */
+  height: 32px !important;
+  object-fit: contain !important;
+  border-radius: 50% !important;
+}
+
