@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Send } from "lucide-react";
 import botLogo from "../assets/olivia-logo.png";
+import { getAuth } from "firebase/auth";
+
 
 const ChatBox: React.FC = () => {
   const [messages, setMessages] = useState<{ text: string; sender: string }[]>([
-    { text: "Hi there! 👋 I'm Olivia, your campus assistant.?", sender: "bot" },
+    { text: "Hi there! 👋 I'm Olivia, your campus assistant.", sender: "bot" },
   ]);
   const [input, setInput] = useState("");
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
@@ -21,9 +23,11 @@ const ChatBox: React.FC = () => {
     setInput("");
 
     try {
+      const auth = getAuth();
+      const token = await auth.currentUser?.getIdToken(); 
       const response = await fetch("http://localhost:3002/api/chatbot", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}`,},
         body: JSON.stringify({ message: input }),
       });
 
