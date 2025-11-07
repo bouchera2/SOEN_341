@@ -1,18 +1,19 @@
 import React, { useState } from "react";
-import {useAuth} from "../hooks/useAuth";
+
+import { useAuth } from "../hooks/useAuth"; 
 
 export const ModernAuthUI: React.FC = () => {
   const [isSignup, setIsSignup] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
-  const {signIn, signUp, signInWithGoogle} = useAuth(); // Initialize your Firebase Auth instance here
+  const {signIn, signUp, signInWithGoogle} = useAuth();
 
   const handleEmailAuth = async () => {
     setError(null);
     try {
       if (isSignup) {
-        await signUp(email, password);
+        await signUp(email, password)
       } else {
         await signIn(email, password);
       }

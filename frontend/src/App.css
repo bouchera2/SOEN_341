@@ -1819,7 +1819,7 @@ body {
 }
 
 .admin-container {
-  max-width: 800px;
+  max-width: 1400px;
   margin: 0 auto;
   background: white;
   border-radius: 16px;
@@ -1960,6 +1960,52 @@ body {
   background: #c0392b;
 }
 
+.admin-content-wrapper {
+  display: flex;
+  gap: 20px;
+  padding: 40px;
+}
+
+.admin-main-panel {
+  flex: 1;
+  min-width: 0;
+}
+
+.admin-side-panel {
+  width: 350px;
+  flex-shrink: 0;
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid #e9ecef;
+  max-height: calc(100vh - 200px);
+  overflow-y: auto;
+}
+
+/* Responsive design for admin panels */
+@media (max-width: 1200px) {
+  .admin-content-wrapper {
+    flex-direction: column;
+  }
+
+  .admin-side-panel {
+    width: 100%;
+    max-height: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .admin-content-wrapper {
+    padding: 20px;
+  }
+
+  .admin-container {
+    max-width: 100%;
+    margin: 0;
+    border-radius: 0;
+  }
+}
+
 .admin-content {
   padding: 40px;
 }
@@ -2066,6 +2112,82 @@ body {
   margin-top: 40px;
   padding-top: 30px;
   border-top: 2px solid #e9ecef;
+}
+
+/* Organizers Section (Side Panel) */
+.organizers-section {
+  height: 100%;
+}
+
+.organizers-section .section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.organizers-section h2 {
+  margin: 0;
+  color: #1a1a2e;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.organizers-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.organizer-card {
+  background: white;
+  border: 1px solid #e9ecef;
+  border-radius: 12px;
+  padding: 16px;
+  transition: all 0.3s ease;
+}
+
+.organizer-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.organizer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.organizer-email {
+  color: #1a1a2e;
+  font-size: 14px;
+  font-weight: 500;
+  flex: 1;
+}
+
+.remove-organizer-btn {
+  background: #e74c3c;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.remove-organizer-btn:hover {
+  background: #c0392b;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
+}
+
+.remove-organizer-btn:active {
+  transform: translateY(0);
 }
 
 .organizer-requests-section .section-header {
