@@ -1,8 +1,12 @@
 import React, { useState } from "react";
 import { useLocation } from "react-router-dom";
 import "./App.css";
+
+// Hooks
 import { useAuth } from "./hooks/useAuth";
 import { useEvents } from "./hooks/useEvents";
+
+// Layout and pages
 import Navbar from "./components/layout/Navbar";
 import HomePage from "./components/pages/HomePage";
 import MyEventsPage from "./components/pages/MyEventsPage";
@@ -11,6 +15,12 @@ import ManageEventsPage from "./components/pages/ManageEventsPage";
 import CreateEventForm from "./components/forms/CreateEventForm";
 import LoginPage from "./components/pages/LoginPage";
 import AdminPage from "./components/pages/AdminPage";
+
+// Chat components
+import ChatBox from "./components/ChatBox";
+import ChatToggle from "./components/ChatToggle";
+
+// Styles
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
@@ -18,6 +28,7 @@ function App() {
   const { user } = useAuth();
   const { events, loading: eventsLoading, error: eventsError, refetch: refetchEvents } = useEvents();
   const location = useLocation();
+
   const [searchQuery, setSearchQuery] = useState("");
   const [filter, setFilter] = useState("All");
 
@@ -35,17 +46,17 @@ function App() {
   // RENDER COMPONENT BASED ON ROUTE
   const renderCurrentPage = () => {
     switch (location.pathname) {
-      case '/myevents':
+      case "/myevents":
         return <MyEventsPage />;
-      case '/profile':
+      case "/profile":
         return <ProfilePage />;
-      case '/create-event':
+      case "/create-event":
         return <CreateEventForm />;
-      case '/manage-events':
+      case "/manage-events":
         return <ManageEventsPage />;
-      case '/admin':
+      case "/admin":
         return <AdminPage />;
-      case '/':
+      case "/":
       default:
         return (
           <HomePage
@@ -63,12 +74,11 @@ function App() {
   // MAIN APP (AFTER LOGIN)
   return (
     <div className="App">
-      <Navbar 
-        searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
-      />
-      
+      <Navbar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
       {renderCurrentPage()}
+
+      {/* 👇 Add the AI Chat assistant here */}
+      <ChatToggle />
     </div>
   );
 }
