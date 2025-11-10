@@ -1,0 +1,213 @@
+
+
+/* --- FIXED CHATBOX POSITION --- */
+.olivia-chat-wrapper {
+  position: fixed !important;
+  bottom: 100px !important; /* a bit above the close button */
+  right: 35px !important;
+  z-index: 999999 !important;
+  display: block !important;
+  width: auto !important;
+  height: auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  pointer-events: auto !important;
+}
+
+/* --- CHATBOX POPUP CONTAINER --- */
+.olivia-chat-container {
+  position: relative !important;
+  width: 360px !important;
+  height: 480px !important;
+  max-width: 360px !important;
+  max-height: 480px !important;
+  background-color: #343541;
+  border-radius: 14px;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+  border: 1px solid #262733;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(6px);
+  isolation: isolate !important;
+}
+
+
+/* --- HEADER --- */
+.olivia-chat-header {
+  height: 40px;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #2e2f3a;
+  background-color: #343541;
+}
+
+.olivia-chat-title {
+  color: #e0e0e0;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+/* --- MESSAGES AREA --- */
+.olivia-messages {
+  flex: 1;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow-y: auto;
+  background-color: #343541;
+  scrollbar-width: thin;
+  scrollbar-color: #6b6c7b #2e2f3a;
+}
+
+.olivia-messages::-webkit-scrollbar {
+  width: 6px;
+}
+.olivia-messages::-webkit-scrollbar-thumb {
+  background: #6b6c7b;
+  border-radius: 3px;
+}
+
+/* --- MESSAGE BUBBLES --- */
+.olivia-message-row {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.olivia-message-row-user {
+  justify-content: flex-end;
+}
+
+.olivia-message-row-bot {
+  justify-content: flex-start;
+}
+
+.olivia-avatar-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.olivia-avatar {
+  width: 18px;
+  height: 18px;
+  border-radius: 9999px;
+  object-fit: cover;
+  display: block;
+}
+
+.olivia-avatar-label {
+  font-size: 8px;
+  color: #828e9e;
+  font-weight: 500;
+}
+
+.olivia-bubble {
+  max-width: 75%;
+  padding: 8px 10px;
+  border-radius: 10px;
+  font-size: 12px;
+  line-height: 1.4;
+  word-wrap: break-word;
+}
+
+.olivia-bubble-bot {
+  background-color: #40414f;
+  color: #ffffff;
+  border-radius: 10px 10px 10px 4px;
+}
+
+.olivia-bubble-user {
+  background-color: #0ea5e9;
+  color: #ffffff;
+  border-radius: 10px 10px 4px 10px;
+}
+
+/* --- INPUT BAR --- */
+.olivia-input-bar {
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-top: 1px solid #2e2f3a;
+  background-color: #343541;
+}
+
+.olivia-input {
+  flex: 1;
+  height: 38px;
+  border-radius: 8px;
+  border: 1px solid #2e2f3a;
+  background-color: #40414f;
+  color: #ffffff;
+  font-size: 12px;
+  padding: 0 10px;
+  outline: none;
+}
+
+.olivia-input::placeholder {
+  color: #828e9e;
+}
+
+/* --- BLUE SEND BUTTON --- */
+.SendBtn {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #0ea5e9;
+  border: none;
+  border-radius: 50%;
+  color: white;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.2s ease;
+  box-shadow: 0 4px 10px rgba(14, 165, 233, 0.4);
+}
+
+.SendBtn[disabled] {
+  opacity: 0.4;
+  cursor: default;
+  box-shadow: none;
+}
+
+.SendBtn svg {
+  width: 16px;
+  height: 16px;
+  fill: white;
+  transition: transform 0.3s ease;
+}
+
+.SendBtn:hover:not([disabled]) svg {
+  transform: translate(2px, -2px);
+}
+
+.SendBtn::before {
+  content: "";
+  position: absolute;
+  width: 130%;
+  height: 130%;
+  top: 0;
+  left: -130%;
+  background-color: white;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  mix-blend-mode: difference;
+}
+
+.SendBtn:hover:not([disabled])::before {
+  left: 0;
+  transform: translate(50%, -50%);
+  border-radius: 0;
+}
+
+.SendBtn:active:not([disabled]) {
+  transform: scale(0.9);
+  box-shadow: 0 2px 5px rgba(14, 165, 233, 0.4);
+}

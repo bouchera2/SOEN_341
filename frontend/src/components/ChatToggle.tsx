@@ -17,7 +17,7 @@ const ChatToggle: React.FC = () => {
         onClick={() => setOpen(!open)}
         whileHover={{ scale: 1.01 }}
         whileTap={{ scale: 0.75 }}
-        animate={{ y: [0, -2, 0] }} 
+        animate={{ y: [0, -5, 0] }} 
         transition={{
           repeat: Infinity,
           duration: 2,
@@ -34,7 +34,7 @@ const ChatToggle: React.FC = () => {
           <img
             src={oliviaLogo}
             alt="Olivia"
-            className="w-9 h-9 rounded-full object-contain"
+            className="w-9 h-15 rounded-full object-contain"
           />
         )}
       </motion.button>

@@ -1,10 +1,22 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Send } from "lucide-react";
 import botLogo from "../assets/olivia-logo.png";
+import { getAuth } from "firebase/auth";
+import "./ChatBox.css";
+
+type Sender = "user" | "bot";
+
+interface Message {
+  text: string;
+  sender: Sender;
+}
 
 const ChatBox: React.FC = () => {
-  const [messages, setMessages] = useState<{ text: string; sender: string }[]>([
-    { text: "Hi there! 👋 I'm Olivia, your campus assistant.?", sender: "bot" },
+  const [messages, setMessages] = useState<Message[]>([
+    {
+      text: "Hi there! 👋 I'm Olivia, your campus AI assistant.",
+      sender: "bot",
+    },
   ]);
   const [input, setInput] = useState("");
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
@@ -14,35 +26,45 @@ const ChatBox: React.FC = () => {
   }, [messages]);
 
   const sendMessage = async () => {
-    if (!input.trim()) return;
+    const text = input.trim();
+    if (!text) return;
 
-    const userMessage = { text: input, sender: "user" };
+    const userMessage: Message = { text, sender: "user" };
     setMessages((prev) => [...prev, userMessage]);
     setInput("");
 
     try {
-      const response = await fetch("http://localhost:3002/api/chatbot", {
+      const auth = getAuth();
+      const currentUser = auth.currentUser;
+      const token = currentUser ? await currentUser.getIdToken() : null;
+
+      const res = await fetch("http://localhost:3002/api/chatbot", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: input }),
+        headers: {
+          "Content-Type": "application/json",
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+        body: JSON.stringify({ message: text }),
       });
 
-      if (response.ok) {
-        const data = await response.json();
-        const botReply = {
-          text: data.reply || "Hmm... I couldn’t find an answer.",
-          sender: "bot",
-        };
-        setMessages((prev) => [...prev, botReply]);
-      } else {
-        throw new Error("Server error");
-      }
-    } catch (error) {
-      console.error("Chat error:", error);
+      if (!res.ok) throw new Error("Server error");
+      const data = await res.json();
+
+      const botReply: Message = {
+        text:
+          data.reply ||
+          "Hmm... I couldn’t find an answer for that, but I’m learning 📚.",
+        sender: "bot",
+      };
+
+      setMessages((prev) => [...prev, botReply]);
+    } catch (err) {
+      console.error("Chat error:", err);
       setMessages((prev) => [
         ...prev,
         {
-          text: "⚠️ The chatbot server isn’t responding right now.",
+          text:
+            "⚠️ I’m having trouble reaching the server right now. Please try again later.",
           sender: "bot",
         },
       ]);
@@ -50,66 +72,74 @@ const ChatBox: React.FC = () => {
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") sendMessage();
+    if (e.key === "Enter") {
+      e.preventDefault();
+      sendMessage();
+    }
   };
 
   return (
-    <div
-      className="chatbox-container fixed bottom-24 right-8 w-[400px] h-[550px]
-                 bg-white rounded-2xl shadow-2xl border border-gray-300 
-                 flex flex-col overflow-hidden z-[999999]"
-    >
-      {/* Header */}
-      <div className="bg-gray-300 text-black text-lg font-semibold p-3 border-b border-gray-800">
-        Campus Chatbot 💬
-      </div>
+    <div className="olivia-chat-wrapper">
+      <div className="olivia-chat-container">
+        {/* Header */}
+        <div className="olivia-chat-header">
+          <span className="olivia-chat-title">Assistant Olivia</span>
+        </div>
 
-      {/* Messages */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-white">
-        {messages.map((msg, idx) => (
-          <div
-            key={idx}
-            className={`flex ${
-              msg.sender === "user" ? "justify-end" : "justify-start"
-            }`}
+        {/* Messages */}
+        <div className="olivia-messages">
+          {messages.map((msg, idx) => {
+            const isUser = msg.sender === "user";
+            return (
+              <div
+                key={idx}
+                className={`olivia-message-row ${
+                  isUser ? "olivia-message-row-user" : "olivia-message-row-bot"
+                }`}
+              >
+                {!isUser && (
+                  <div className="olivia-avatar-wrap">
+                    <img
+                      src={botLogo}
+                      alt="Olivia"
+                      className="olivia-avatar"
+                    />
+                    <span className="olivia-avatar-label">Olivia</span>
+                  </div>
+                )}
+
+                <div
+                  className={`olivia-bubble ${
+                    isUser ? "olivia-bubble-user" : "olivia-bubble-bot"
+                  }`}
+                >
+                  {msg.text}
+                </div>
+              </div>
+            );
+          })}
+          <div ref={messagesEndRef} />
+        </div>
+
+        {/* Input + send */}
+        <div className="olivia-input-bar">
+          <input
+            type="text"
+            className="olivia-input"
+            placeholder="Type a message..."
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={handleKeyDown}
+          />
+          <button
+            onClick={sendMessage}
+            disabled={!input.trim()}
+            className="SendBtn"
+            type="button"
           >
-                 {msg.sender === "bot" && (
-              <img
-            src={botLogo}
-            alt="Olivia"
-            style={{ width: "22px", height: "22px", borderRadius: "50%", marginRight: "6px", objectFit: "cover" }}
-        />
-      )}
-            <div
-              className={`px-4 py-2 rounded-2xl max-w-[80%] break-words text-sm ${
-                msg.sender === "user"
-                  ? "bg-indigo-600 text-black rounded-br-none"
-                  : "bg-gray-200 text-gray-800 rounded-bl-none"
-              }`}
-            >
-              {msg.text}
-            </div>
-          </div>
-        ))}
-        <div ref={messagesEndRef} />
-      </div>
-
-      {/* Input */}
-      <div className="p-3 bg-white border-t border-gray-200 flex items-center gap-2">
-        <input
-          type="text"
-          className="flex-1 p-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm"
-          placeholder="Type a message..."
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={handleKeyDown}
-        />
-        <button
-          onClick={sendMessage}
-          className="bg-indigo-600 hover:bg-indigo-700 text-white p-2 rounded-full "
-        >
-          <Send size={18} />
-        </button>
+            <Send size={16} />
+          </button>
+        </div>
       </div>
     </div>
   );
