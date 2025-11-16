@@ -21,7 +21,7 @@ M-Amar Kseibi (40276594) @3Ammar3
 
 Backend: Java
 
-Database: mySQL
+Database: FireBase
 
 Framework for the backend: Springboot
 
