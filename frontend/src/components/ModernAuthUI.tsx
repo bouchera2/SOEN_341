@@ -1,4 +1,3 @@
-
 /*import React, { useState } from "react";
 import { auth, googleProvider } from "../services/firebase";
 import {
@@ -6,7 +5,6 @@ import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
 } from "firebase/auth";
-
 
 export const ModernAuthUI: React.FC = () => {
   const [isSignup, setIsSignup] = useState(false);

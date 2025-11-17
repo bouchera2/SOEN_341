@@ -17,6 +17,10 @@ const AdminPage: React.FC = () => {
   // Organizer requests state
   const [organizerRequests, setOrganizerRequests] = useState<any[]>([]);
   const [loadingRequests, setLoadingRequests] = useState(false);
+  
+  // Organizers list state
+  const [organizers, setOrganizers] = useState<any[]>([]);
+  const [loadingOrganizers, setLoadingOrganizers] = useState(false);
   // No need for ref with jsQR - it's a static function
 
   // Check authentication and role
@@ -57,10 +61,11 @@ const AdminPage: React.FC = () => {
     return () => clearTimeout(timeout);
   }, [authLoading, roleLoading, user, userRole, navigate]);
 
-  // Fetch organizer requests when admin access is granted
+  // Fetch organizer requests and organizers when admin access is granted
   useEffect(() => {
     if (user && userRole === 'admin') {
       fetchOrganizerRequests();
+      fetchOrganizers();
     }
   }, [user, userRole]);
 
@@ -113,7 +118,8 @@ const AdminPage: React.FC = () => {
 
       if (response.ok && result.success) {
         alert('Organizer role granted successfully!');
-        fetchOrganizerRequests(); // Refresh the list
+        fetchOrganizerRequests(); // Refresh the requests list
+        fetchOrganizers(); // Refresh the organizers list
       } else {
         alert(`Failed to grant organizer role: ${result.error || 'Unknown error'}`);
       }
@@ -146,6 +152,67 @@ const AdminPage: React.FC = () => {
       }
     } catch (error) {
       console.error('Error denying organizer request:', error);
+      alert('Network error. Please try again.');
+    }
+  };
+
+  const fetchOrganizers = async () => {
+    if (!user) return;
+
+    setLoadingOrganizers(true);
+    try {
+      const token = await user.getIdToken();
+      const response = await fetch('http://localhost:3002/userRole/organizers', {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      const result = await response.json();
+
+      if (response.ok && result.success) {
+        setOrganizers(result.data || []);
+      } else {
+        console.error('Failed to fetch organizers:', result.error);
+        setOrganizers([]);
+      }
+    } catch (error) {
+      console.error('Error fetching organizers:', error);
+      setOrganizers([]);
+    } finally {
+      setLoadingOrganizers(false);
+    }
+  };
+
+  const handleRemoveOrganizer = async (organizerUid: string, organizerEmail: string) => {
+    if (!user) return;
+
+    if (!window.confirm(`Are you sure you want to remove organizer role from ${organizerEmail}?`)) {
+      return;
+    }
+
+    try {
+      const token = await user.getIdToken();
+      const response = await fetch(`http://localhost:3002/userRole/${organizerUid}/remove`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      const result = await response.json();
+
+      if (response.ok && result.success) {
+        alert('Organizer role removed successfully!');
+        fetchOrganizers(); // Refresh the organizers list
+      } else {
+        alert(`Failed to remove organizer role: ${result.error || 'Unknown error'}`);
+      }
+    } catch (error) {
+      console.error('Error removing organizer role:', error);
       alert('Network error. Please try again.');
     }
   };
@@ -333,8 +400,9 @@ const AdminPage: React.FC = () => {
           </div>
         </div>
 
-        <div className="admin-content">
-          <div className="ticket-claim-section">
+        <div className="admin-content-wrapper">
+          <div className="admin-main-panel">
+            <div className="ticket-claim-section">
             <h2>Claim Ticket</h2>
             
             <div className="claim-methods">
@@ -450,6 +518,53 @@ const AdminPage: React.FC = () => {
                 ))}
               </div>
             )}
+          </div>
+          </div>
+
+          {/* Organizers List Panel */}
+          <div className="admin-side-panel">
+            <div className="organizers-section">
+              <div className="section-header">
+                <h2>Organizers</h2>
+                <button 
+                  onClick={fetchOrganizers} 
+                  className="refresh-btn"
+                  disabled={loadingOrganizers}
+                >
+                  {loadingOrganizers ? '⏳' : '🔄'}
+                </button>
+              </div>
+
+              {loadingOrganizers ? (
+                <div className="loading-container">
+                  <div className="loading-spinner"></div>
+                  <p>Loading organizers...</p>
+                </div>
+              ) : organizers.length === 0 ? (
+                <div className="empty-state">
+                  <div className="empty-state-icon">👥</div>
+                  <h3>No organizers</h3>
+                  <p>There are no users with organizer role.</p>
+                </div>
+              ) : (
+                <div className="organizers-list">
+                  {organizers.map((organizer) => (
+                    <div key={organizer.uid} className="organizer-card">
+                      <div className="organizer-content">
+                        <span className="organizer-email">{organizer.email}</span>
+                        <button
+                          onClick={() => handleRemoveOrganizer(organizer.uid, organizer.email)}
+                          className="remove-organizer-btn"
+                          title="Remove organizer role"
+                        >
+                          🗑️ Remove
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </motion.div>
