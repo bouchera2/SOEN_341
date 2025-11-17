@@ -1,138 +1,145 @@
-import React, { useState } from "react";
-console.log("🔵 ChatBox mounted");
+import React, { useState, useEffect, useRef } from "react";
+import { Send } from "lucide-react";
+import botLogo from "../assets/olivia-logo.png";
+import { getAuth } from "firebase/auth";
+import "./ChatBox.css";
 
+type Sender = "user" | "bot";
 
-type Props = {
-  onClose?: () => void;  // 👈 permet à ChatToggle de fermer
-};
+interface Message {
+  text: string;
+  sender: Sender;
+}
 
-const ChatBox: React.FC<Props> = ({ onClose }) => {
-  const [messages, setMessages] = useState<{ from: string; text: string }[]>([]);
+const ChatBox: React.FC = () => {
+  const [messages, setMessages] = useState<Message[]>([
+    {
+      text: "Hi there! 👋 I'm Olivia, your campus AI assistant.",
+      sender: "bot",
+    },
+  ]);
   const [input, setInput] = useState("");
-  const [loading, setLoading] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
   const sendMessage = async () => {
-    if (!input.trim()) return;
+    const text = input.trim();
+    if (!text) return;
 
-    const userMsg = { from: "user", text: input };
-    setMessages((prev) => [...prev, userMsg]);
+    const userMessage: Message = { text, sender: "user" };
+    setMessages((prev) => [...prev, userMessage]);
     setInput("");
-    setLoading(true);
 
     try {
-      const res = await fetch("/api/chat", {
+      const auth = getAuth();
+      const currentUser = auth.currentUser;
+      const token = currentUser ? await currentUser.getIdToken() : null;
+
+      const res = await fetch("http://localhost:3002/api/chatbot", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: userMsg.text }),
+        headers: {
+          "Content-Type": "application/json",
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+        body: JSON.stringify({ message: text }),
       });
 
-      if (!res.ok) throw new Error(await res.text());
+      if (!res.ok) throw new Error("Server error");
       const data = await res.json();
-      const aiMsg = { from: "ai", text: data.reply || "(pas de réponse)" };
-      setMessages((prev) => [...prev, aiMsg]);
-    } catch (e) {
-      setMessages((prev) => [...prev, { from: "ai", text: "⚠️ Erreur de connexion au serveur" }]);
-    } finally {
-      setLoading(false);
+
+      const botReply: Message = {
+        text:
+          data.reply ||
+          "Hmm... I couldn’t find an answer for that, but I’m learning 📚.",
+        sender: "bot",
+      };
+
+      setMessages((prev) => [...prev, botReply]);
+    } catch (err) {
+      console.error("Chat error:", err);
+      setMessages((prev) => [
+        ...prev,
+        {
+          text:
+            "⚠️ I’m having trouble reaching the server right now. Please try again later.",
+          sender: "bot",
+        },
+      ]);
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      sendMessage();
     }
   };
 
   return (
-    <div
-      style={{
-        position: "fixed",
-        bottom: 100,
-        right: 20,
-        width: 380,
-        height: 500,
-        background: "#fff",
-        borderRadius: 16,
-        boxShadow: "0 8px 30px rgba(0,0,0,0.25)",
-        overflow: "hidden",
-        zIndex: 3000,
-        display: "flex",
-        flexDirection: "column",
-      }}
-    >
-      {/* Header interne + bouton X en haut à droite */}
-      <div
-        style={{
-          background: "linear-gradient(135deg, #0078ff 0%, #00c6ff 100%)",
-          color: "#fff",
-          padding: "10px 16px",
-          fontWeight: 700,
-          position: "relative",
-        }}
-      >
-        🤖 Chat IA — ConcoEvents
-        {onClose && (
+    <div className="olivia-chat-wrapper">
+      <div className="olivia-chat-container">
+        {/* Header */}
+        <div className="olivia-chat-header">
+          <span className="olivia-chat-title">Assistant Olivia</span>
+        </div>
+
+        {/* Messages */}
+        <div className="olivia-messages">
+          {messages.map((msg, idx) => {
+            const isUser = msg.sender === "user";
+            return (
+              <div
+                key={idx}
+                className={`olivia-message-row ${
+                  isUser ? "olivia-message-row-user" : "olivia-message-row-bot"
+                }`}
+              >
+                {!isUser && (
+                  <div className="olivia-avatar-wrap">
+                    <img
+                      src={botLogo}
+                      alt="Olivia"
+                      className="olivia-avatar"
+                    />
+                    <span className="olivia-avatar-label">Olivia</span>
+                  </div>
+                )}
+
+                <div
+                  className={`olivia-bubble ${
+                    isUser ? "olivia-bubble-user" : "olivia-bubble-bot"
+                  }`}
+                >
+                  {msg.text}
+                </div>
+              </div>
+            );
+          })}
+          <div ref={messagesEndRef} />
+        </div>
+
+        {/* Input + send */}
+        <div className="olivia-input-bar">
+          <input
+            type="text"
+            className="olivia-input"
+            placeholder="Type a message..."
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={handleKeyDown}
+          />
           <button
-            onClick={onClose}
-            aria-label="Fermer le chat"
-            style={{
-              position: "absolute",
-              top: 6,
-              right: 10,
-              background: "transparent",
-              border: "none",
-              color: "#fff",
-              fontSize: 22,
-              fontWeight: 800,
-              cursor: "pointer",
-              lineHeight: 1,
-            }}
+            onClick={sendMessage}
+            disabled={!input.trim()}
+            className="SendBtn"
+            type="button"
           >
-            ×
+            <Send size={16} />
           </button>
-        )}
-      </div>
-
-      {/* Corps du chat */}
-      <div style={{ padding: 12, flex: 1, background: "#fafafa", overflow: "auto" }}>
-        {messages.map((m, i) => (
-          <p
-            key={i}
-            style={{
-              textAlign: m.from === "user" ? "right" : "left",
-              color: m.from === "user" ? "#0078ff" : "#333",
-              margin: "6px 0",
-            }}
-          >
-            <b>{m.from === "user" ? "Toi" : "IA"}:</b> {m.text}
-          </p>
-        ))}
-        {loading && <p style={{ textAlign: "center" }}>⏳ L’IA réfléchit...</p>}
-      </div>
-
-      {/* Input */}
-      <div style={{ display: "flex", gap: 8, padding: 12, background: "#fff", borderTop: "1px solid #eee" }}>
-        <input
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          placeholder="Écris ton message..."
-          onKeyDown={(e) => e.key === "Enter" && sendMessage()}
-          style={{
-            flex: 1,
-            padding: "10px 12px",
-            borderRadius: 8,
-            border: "1px solid #ddd",
-            outline: "none",
-          }}
-        />
-        <button
-          onClick={sendMessage}
-          disabled={loading}
-          style={{
-            background: "#0078ff",
-            color: "#fff",
-            border: "none",
-            borderRadius: 8,
-            padding: "10px 14px",
-            cursor: "pointer",
-          }}
-        >
-          Envoyer
-        </button>
+        </div>
       </div>
     </div>
   );

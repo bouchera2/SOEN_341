@@ -5,6 +5,9 @@ import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
 } from "firebase/auth";
+import React, { useState } from "react";
+
+import { useAuth } from "../hooks/useAuth"; 
 
 export const ModernAuthUI: React.FC = () => {
   const [isSignup, setIsSignup] = useState(false);
