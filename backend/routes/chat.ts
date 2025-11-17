@@ -15,7 +15,7 @@ console.log("🔑 OpenAI Key loaded?", !!process.env.OPENAI_API_KEY);
 
 async function getAllEventsViaAPI(): Promise<any[]> {
   try {
-    const response = await fetch("http://localhost:3002/events/getAll");
+    const response = await fetch("http://localhost:3000/events/getAll");
     if (!response.ok) throw new Error("Failed to fetch events from backend");
 
    
