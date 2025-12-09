@@ -114,7 +114,7 @@ const escapeCsvValue = (value: string): string => {
   return normalized;
 };
 
-const toCsvField = (value: unknown): string | undefined => {
+export const toCsvField = (value: unknown): string | undefined => {
   if (typeof value === 'string') {
     const trimmed = value.trim();
     return trimmed.length ? trimmed : undefined;
